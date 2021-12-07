@@ -4,9 +4,18 @@
 import time, os
 
 # Assigning preset input values to prevent error.
-aantalBolletjes = 0 # int
-hoorntjeBakje = 'Preset' # str
-doorgaanStoppen = 'Preset' # str
+aantalBolletjes = 0
+hoorntjeBakje = 'Preset'
+doorgaanStoppen = 'Preset'
+smaakBol = 'Preset'
+smaakBol1 = 'Preset'
+smaakBol2 = 'Preset'
+smaakBol3 = 'Preset'
+smaakBol4 = 'Preset'
+smaakBol5 = 'Preset'
+smaakBol6 = 'Preset'
+smaakBol7 = 'Preset'
+smaakBol8 = 'Preset'
 
 # Function for clearing screen (CLS), parameter is time until execution after initiation.
 def clearScreen(sleepTime):
@@ -46,6 +55,24 @@ def vraagAantalBolletjes(): # Main function 1
             print("Sorry dat snap ik niet...")
             clearScreen(2)
             repeat = True
+
+
+#
+def vraagSmaken():
+    global smaakBol
+    #
+    Bolletje = 1
+    while Bolletje <= aantalBolletjes:
+        smaakBol = input(f"Welke smaak wilt u voor bolletje nummer {Bolletje}? A) Aardbei, C) Chocolade, M) Munt of V) Vanille? ").upper()
+        cancelProgramRequest()
+        if smaakBol == 'A' or smaakBol == 'C' or smaakBol == 'M' or smaakBol == 'V':
+            print("Ok!")
+            clearScreen(2)
+            Bolletje += 1
+        else:
+            print("Sorry, dat snap ik niet...")
+            clearScreen(2)
+
 
 
 #
@@ -115,6 +142,7 @@ def papiGelato():
     while repeat:
         repeat = False
         vraagAantalBolletjes()
+        vraagSmaken()
         vraagHoorntjeBakje()
         vraagDoorgaanStoppen()
         if doorgaanStoppen == 'Y': # If Y, the main function will be repeated.
