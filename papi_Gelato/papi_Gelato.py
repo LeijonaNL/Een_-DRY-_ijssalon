@@ -6,6 +6,7 @@ import time, os
 # Assigning preset input values to prevent error.
 bestellingNr = 1
 aantalBolletjes = 0
+aantalLiter = 0
 aantalHoorntjes = 0
 aantalBakjes = 0
 aantalToppings = 0
@@ -15,6 +16,7 @@ aantalSpikkels = 0
 aantalCaramelHoorntje = 0
 aantalCaramelBakje = 0
 prijsBolletjes = 0
+prijsLiter = 0
 prijsHoorntjes = 0
 prijsBakjes = 0
 prijsToppings = 0
@@ -26,7 +28,9 @@ eindPrijs = 0
 hoorntjeBakje = 'Preset'
 doorgaanStoppen = 'Preset'
 smaakBol = 'Preset'
+smaakLiter = 'Preset'
 topping = 'Preset'
+ParticulierZakelijk = 'Preset'
 
 # Function for clearing screen (CLS), parameter is time until execution after initiation.
 def clearScreen(sleepTime):
@@ -37,6 +41,7 @@ def clearScreen(sleepTime):
 def cancelProgramRequest():
     if aantalBolletjes == 'CANCELPROGRAM'\
     or smaakBol == 'CANCELPROGRAM'\
+    or smaakLiter == 'CANCELPROGRAM'\
     or hoorntjeBakje == 'CANCELPROGRAM'\
     or topping == 'CANCELPROGRAM'\
     or doorgaanStoppen == 'CANCELPROGRAM':
@@ -44,6 +49,54 @@ def cancelProgramRequest():
         clearScreen(2)
         exit()
 
+
+#
+def vraagParticulierZakelijk():
+    #
+    global ParticulierZakelijk
+    print("Welkom bij Papi Gelato!")
+    repeat = True
+    while repeat:
+        repeat = False
+        ParticulierZakelijk = input("Bent u 1) particulier of 2) zakelijk? ").upper()
+        cancelProgramRequest()
+        if ParticulierZakelijk == '1':
+            print("Ok!")
+            clearScreen(1)
+            ParticulierZakelijk = 'particulier'
+        elif ParticulierZakelijk == '2':
+            print("Ok!")
+            clearScreen(1)
+            ParticulierZakelijk = 'zakelijk'
+        else:
+            print("Sorry dat snap ik niet...")
+            clearScreen(1.5)
+            repeat = True
+
+
+#
+def vraagAantalLiter():
+    #
+    global aantalLiter
+    repeat = True
+    while repeat:
+        repeat = False
+        aantalLiter = input("Hoeveel liter wilt U bestellen? ").upper()
+    cancelProgramRequest()
+    if aantalLiter != 'CANCELPROGRAM':
+        aantalLiter = int(aantalLiter)
+    if aantalLiter > 0:
+        print("Ok!")
+        clearScreen(1)
+    elif aantalLiter == 0:
+        print("Sorry maar U kunt niet minder dan 1L bestellen.")
+        clearScreen(2)
+        repeat = True
+    else:
+        print("Sorry dat snap ik niet...")
+        clearScreen(1.5)
+        repeat = True
+        
 
 # 
 def vraagAantalBolletjes(): # Main function 1
@@ -71,7 +124,7 @@ def vraagAantalBolletjes(): # Main function 1
             repeat = True
         else:
             print("Sorry dat snap ik niet...")
-            clearScreen(2)
+            clearScreen(1.5)
             repeat = True
 
 
@@ -79,18 +132,38 @@ def vraagAantalBolletjes(): # Main function 1
 def vraagSmaken():
     # This variable is now globally usable.
     global smaakBol
+    global smaakLiter
     # While, repeats the question (every time for a different Bolletje) until all Bolletjes have been assigned a flavour.
-    Bolletje = 1
-    while Bolletje <= aantalBolletjes:
-        smaakBol = input(f"Welke smaak wilt u voor bolletje nummer {Bolletje}? A) Aardbei, C) Chocolade, M) Munt of V) Vanille? ").upper()
-        cancelProgramRequest()
-        if smaakBol == 'A' or smaakBol == 'C' or smaakBol == 'M' or smaakBol == 'V':
-            print("Ok!")
-            clearScreen(2)
-            Bolletje += 1
-        else:
-            print("Sorry, dat snap ik niet...")
-            clearScreen(2)
+    bolletje = 1
+    liter = 1
+    if ParticulierZakelijk == 'particulier':
+        while bolletje <= aantalBolletjes:
+            smaakBol = input(f"Welke smaak wilt U voor bolletje nummer {bolletje}? A) Aardbei, C) Chocolade, M) Munt of V) Vanille? ").upper()
+            cancelProgramRequest()
+            if smaakBol == 'A'\
+            or smaakBol == 'C'\
+            or smaakBol == 'M'\
+            or smaakBol == 'V':
+                print("Ok!")
+                clearScreen(1)
+                bolletje += 1
+            else:
+                print("Sorry, dat snap ik niet...")
+                clearScreen(1.5)
+    elif ParticulierZakelijk == 'zakelijk':
+        while liter <= aantalLiter:
+            smaakLiter = input(f"Welke smaak wilt U voor de {liter}e liter? A) Aardbei, C) Chocolade, M) Munt of V) Vanille? ").upper()
+            cancelProgramRequest()
+            if smaakLiter == 'A'\
+            or smaakLiter == 'C'\
+            or smaakLiter == 'M'\
+            or smaakLiter == 'V':
+                print("Ok!")
+                clearScreen(1)
+                liter += 1
+            else:
+                print("Sorry, dat snap ik niet...")
+                clearScreen(1.5)
 
 
 
@@ -121,7 +194,7 @@ def vraagHoorntjeBakje():
                 aantalBakjes += 1
             else:
                 print("Sorry, dat snap ik niet...")
-                clearScreen(2)
+                clearScreen(1.5)
                 repeat = True
         elif 1 < aantalBolletjes <= 3:
             hoorntjeBakje = input(f"Wilt U deze {aantalBolletjes} bolletjes in A) een hoorntje of B) een bakje? ").upper()
@@ -138,7 +211,7 @@ def vraagHoorntjeBakje():
                 aantalBakjes += 1
             else:
                 print("Sorry, dat snap ik niet...")
-                clearScreen(2)
+                clearScreen(1.5)
                 repeat = True
 
 
@@ -185,7 +258,7 @@ def vraagTopping():
                 aantalCaramelBakje += 1
         else:
             print("Sorry, dat snap ik niet...")
-            clearScreen(2)
+            clearScreen(1.5)
             repeat = True
 
 
@@ -203,6 +276,7 @@ def Bonnetje():
 
     # Presetting calculations.
     prijsBolletjes = aantalBolletjesTotaal * 1.10
+    prijsLiter = aantalLiter * 9.80
     prijsHoorntjes = aantalHoorntjes * 1.25
     prijsBakjes = aantalBakjes * 0.75
     prijsSlagroom = aantalSlagroom * 0.50
@@ -210,33 +284,50 @@ def Bonnetje():
     prijsCaramelHoorntje = aantalCaramelHoorntje * 0.60
     prijsCaramelBakje = aantalCaramelBakje * 0.90
     prijsToppings = prijsSlagroom + prijsSpikkels + prijsCaramelHoorntje + prijsCaramelBakje
-    eindPrijs = prijsBolletjes + prijsHoorntjes + prijsBakjes + prijsToppings
+    eindPrijs = prijsBolletjes + prijsLiter + prijsHoorntjes + prijsBakjes + prijsToppings
+    BTW = eindPrijs / 100 * 9
 
-    # Ticket print.
-    if aantalBolletjesTotaal < 10:
-        print(f'''----------[Papi Gelato]----------
+    # Ticket print - Particulier.
+    if ParticulierZakelijk == 'particulier':
+        if aantalBolletjesTotaal < 10:
+            print(f'''----------[Papi Gelato]----------
 
 Bolletjes     {aantalBolletjesTotaal} x 1.10   = €{format(prijsBolletjes, '.2f')}''')
-    elif aantalBolletjesTotaal >= 10:
-        print(f'''----------[Papi Gelato]----------
+        elif aantalBolletjesTotaal >= 10:
+            print(f'''----------[Papi Gelato]----------
 
 Bolletjes     {aantalBolletjesTotaal} x 1.10  = €{format(prijsBolletjes, '.2f')}''')
-    if aantalHoorntjes > 0:
-        print(f'''Hoorntjes     {aantalHoorntjes} x 1.25   = €{format(prijsHoorntjes, '.2f')}''')
-    if aantalBakjes > 0:
-        print(f'''Bakjes        {aantalBakjes} x 0.75   = €{format(prijsBakjes, '.2f')}''')
-    if aantalToppings > 0:
-        print(f'''Toppings      {aantalToppings}''')
-    if aantalSlagroom > 0:
-        print(f'''Slagroom      {aantalSlagroom} x 0.50   = €{format(prijsSlagroom, '.2f')}''')
-    if aantalSpikkels > 0:
-        print(f'''Spikkels      {aantalSpikkels} x 0.30   = €{format(prijsSpikkels, '.2f')}''')
-    if aantalCaramelHoorntje > 0:
-        print(f'''Hoorn Caramel {aantalCaramelHoorntje} x 0.60   = €{format(prijsCaramelHoorntje, '.2f')}''')
-    if aantalCaramelBakje > 0:
-        print(f'''Bakje Caramel {aantalCaramelBakje} x 0.90   = €{format(prijsCaramelBakje, '.2f')}''')
-    print(f'''                         -------- +
+        if aantalHoorntjes > 0:
+            print(f'''Hoorntjes     {aantalHoorntjes} x 1.25   = €{format(prijsHoorntjes, '.2f')}''')
+        if aantalBakjes > 0:
+            print(f'''Bakjes        {aantalBakjes} x 0.75   = €{format(prijsBakjes, '.2f')}''')
+        if aantalToppings > 0:
+            print(f'''Toppings      {aantalToppings}''')
+        if aantalSlagroom > 0:
+            print(f'''Slagroom      {aantalSlagroom} x 0.50   = €{format(prijsSlagroom, '.2f')}''')
+        if aantalSpikkels > 0:
+            print(f'''Spikkels      {aantalSpikkels} x 0.30   = €{format(prijsSpikkels, '.2f')}''')
+        if aantalCaramelHoorntje > 0:
+            print(f'''Hoorn Caramel {aantalCaramelHoorntje} x 0.60   = €{format(prijsCaramelHoorntje, '.2f')}''')
+        if aantalCaramelBakje > 0:
+            print(f'''Bakje Caramel {aantalCaramelBakje} x 0.90   = €{format(prijsCaramelBakje, '.2f')}''')
+        print(f'''                         -------- +
 Totaal                   = €{format(eindPrijs, '.2f')}\n''')
+
+    # Ticket print - Zakelijk.
+    if ParticulierZakelijk == 'zakelijk':
+        if aantalLiter < 10:
+            print(f'''----------[Papi Gelato]----------
+
+Liter         {aantalLiter} x 9.80   = €{format(prijsLiter, '.2f')}''')
+        elif aantalLiter >= 10:
+            print(f'''----------[Papi Gelato]----------
+
+Liter        {aantalLiter} x 9.80   = €{format(prijsLiter, '.2f')}''')
+        print(f'''                         -------- +
+Totaal                   = €{format(eindPrijs, '.2f')}
+BTW (9%)                 = €{format(BTW, '.2f')}\n''')
+
 
 
 # Asking if you want to repeat ordering/order more.
@@ -253,13 +344,13 @@ def vraagDoorgaanStoppen():
         cancelProgramRequest()
         if doorgaanStoppen == 'Y':
             print("Ok! Zeg maar wat U wilt.")
-            clearScreen(2)
+            clearScreen(1.5)
         elif doorgaanStoppen == 'N':
             print("Ok! Hier is Uw bonnetje, bedankt en tot ziens!")
-            clearScreen(2)
+            clearScreen(1.5)
         else:
             print("Sorry, dat snap ik niet...")
-            clearScreen(2)
+            clearScreen(1.5)
             repeat = True
 
 
@@ -271,20 +362,30 @@ def papiGelato():
     global aantalBolletjesTotaal
     repeat = True
     # While repeat, in case the program is to be re-executed.
-    while repeat:
-        repeat = False
-        vraagAantalBolletjes()
-        vraagSmaken()
-        vraagHoorntjeBakje()
-        vraagTopping()
-        aantalBolletjesTotaal += aantalBolletjes
-        vraagDoorgaanStoppen()
-        if doorgaanStoppen == 'Y': # If Y, the main function will be repeated.
-            bestellingNr += 1
-            repeat = True
-        elif doorgaanStoppen == 'N':
+    vraagParticulierZakelijk()
+    if ParticulierZakelijk == 'particulier':
+        while repeat:
+            repeat = False
+            vraagAantalBolletjes()
+            vraagSmaken()
+            vraagHoorntjeBakje()
+            vraagTopping()
+            aantalBolletjesTotaal += aantalBolletjes
+            vraagDoorgaanStoppen()
+            if doorgaanStoppen == 'Y': # If Y, the main function will be repeated.
+                bestellingNr += 1
+                repeat = True
+            elif doorgaanStoppen == 'N':
+                print("Ok! Hier is Uw bonnetje, bedankt en tot ziens!")
+                Bonnetje()
+    elif ParticulierZakelijk == 'zakelijk':
+        while repeat:
+            repeat = False
+            vraagAantalLiter()
+            vraagSmaken()
             print("Ok! Hier is Uw bonnetje, bedankt en tot ziens!")
             Bonnetje()
+
 
 # Main function execution.
 clearScreen(0.5)
